@@ -45,8 +45,10 @@ public class fstvlController extends HttpServlet{
 		String nextPage = null;  
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
+		HttpSession session = request.getSession();
 		String action = request.getPathInfo(); 
 		if (action == null || action.equals("/main.do")) { 
+			session.removeAttribute("check1");
 			String start = "";
 			String end = ""; 
 			String main = "";
@@ -61,7 +63,50 @@ public class fstvlController extends HttpServlet{
 				if(Integer.parseInt(dayNow)<10)
 					start = yearNow+"-0"+monNow+"-0"+dayNow;
 				else
+					start = yearNow+"-0"+monNow+"-"+dayNow;
+			}else{
+				if(Integer.parseInt(dayNow)<10)
+					start = yearNow+"-"+monNow+"-0"+dayNow;
+				else
 					start = yearNow+"-"+monNow+"-"+dayNow;
+			}			
+			if(monNow.equals("12")) {
+				if(Integer.parseInt(dayNow)<10)
+					end = Integer.toString(now.getYear()+1)+"-01-0"+dayNow;	
+				else
+					end = Integer.toString(now.getYear()+1)+"-01-"+dayNow;								
+			}else if(Integer.parseInt(monNow)<9){
+				if(Integer.parseInt(dayNow)<10)
+					end = yearNow+"-0"+Integer.toString(now.getMonthValue()+1)+"-0"+dayNow;	
+				else
+					end = yearNow+"-0"+Integer.toString(now.getMonthValue()+1)+"-"+dayNow;				
+			}else{
+				if(Integer.parseInt(dayNow)<10)
+					end = yearNow+"-"+Integer.toString(now.getMonthValue()+1)+"-0"+dayNow;	
+				else
+					end = yearNow+"-"+Integer.toString(now.getMonthValue()+1)+"-"+dayNow;				
+			}
+			fstvlSearchVO fsv = new fstvlSearchVO(start,end,main,sub,name);
+			List<fstvlVO> maplist = mapdao.fstvlSearch(fsv);
+			request.setAttribute("fsv", fsv);
+			request.setAttribute("mapList", maplist);
+			nextPage = "/main.jsp";
+		}else if (action.equals("/remain.do")) { 
+			String start = "";
+			String end = ""; 
+			String main = "";
+			String sub = "";
+			String name = "";
+			fstvlDAO mapdao = new fstvlDAO();
+			LocalDate now = LocalDate.now();
+			String yearNow = Integer.toString(now.getYear());
+			String monNow = Integer.toString(now.getMonthValue());
+			String dayNow = Integer.toString(now.getDayOfMonth());
+			if(Integer.parseInt(monNow)<10){
+				if(Integer.parseInt(dayNow)<10)
+					start = yearNow+"-0"+monNow+"-0"+dayNow;
+				else
+					start = yearNow+"-0"+monNow+"-"+dayNow;
 			}else{
 				if(Integer.parseInt(dayNow)<10)
 					start = yearNow+"-"+monNow+"-0"+dayNow;

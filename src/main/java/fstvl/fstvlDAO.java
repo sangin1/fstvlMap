@@ -10,7 +10,7 @@ import java.util.List;
 import fstvl.fstvlVO; 
 
 public class fstvlDAO {
-	final static String dbconnect = "jdbc:mysql://localhost:3306/newdb?useUnicode=true&serverTimezone=UTC";
+	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
 	public fstvlDAO() {
 		try {
 			//Class.forName("org.mariadb.jdbc.Driver");

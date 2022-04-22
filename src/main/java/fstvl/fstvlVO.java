@@ -43,10 +43,12 @@ public class fstvlVO {
 		this.instt_nm = instt_nm;
 		this.fnum = fnum;
 		this.suprtInstt = suprtInstt;
-	}
+	} 
+	
 	public fstvlVO() {
-		
+		super();
 	}
+
 	public String getRdnmadr() {
 		return rdnmadr;
 	}

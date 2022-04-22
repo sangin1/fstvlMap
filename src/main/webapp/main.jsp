@@ -25,20 +25,57 @@ request.setCharacterEncoding("UTF-8");
   		width: 40px;
   		font-weight : bold;
   	}
+  	#a2{
+  		position: absolute;
+		  width: 100%;
+		  height: 100%;
+  	}
   </style>
 </head>
 
 <body>
-	<div id="top" style="height:250px">
-		<form method="post"   action="${contextPath}/map/mapSearch.do"> 
+	<c:choose>
+	    <c:when test='${check1 == "0"}' >
+	        <script>
+				alert('아이디 또는 비밀번호가 틀렸습니다.');
+				history.back();
+			</script>
+	   </c:when>
+	  </c:choose>
+	<div id="top" style="height:20%">
+		
 			<table>
 				<tr>
-					<td></td><td><font size="20">국내축제검색</font></td>
+					<th style="width:5vw;"></th><th><label style="width:500px"><font size=20>국내축제검색</font></label></th>	
+					  <c:choose>
+					    <c:when test="${empty msg}">				
+							<form name = "frm"  method="post"   action="${contextPath}/login/login.do">
+								<th><label for="inputid3" style="width:50px">아이디</label></th>						    
+								      <th><input type="text" name="id" style="width:100px"></th>								   
+								    <th><label for="inputPassword3" style="width:70px" >비밀번호</label></th>								
+								      <th><input type="password"  name="pwd" style="width:100px"></th>								    
+								    <th><button type="submit" style="width:80px" class="btn btn-info">로그인</button></th>
+								    </form>							
+								      <td><button type="button" class="btn btn-success" onclick="location.href='${contextPath}/login/memberForm.do'" style="width:100px">회원가입</button></td>								  
+							
+						</c:when>
+						 <c:otherwise> 
+						 	<td>
+						 		<label style="width:250px"></label></td><td><button class="btn btn-success" type="button" onclick="location.href='${contextPath}/login/mypage.do'" style="width:120px">마이페이지</button>
+						 	</td>
+						 	<td>
+						 		<button class="btn btn-info" type="button" onclick="location.href='${contextPath}/login/logout.do'" style="width:120px">로그아웃</button> 
+						 	</td>							  
+						 </c:otherwise>	
+					  </c:choose>				
 				</tr>
-				<tr><td><font size="10">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</font></td></tr>
+				<tr style="height:70px;"><td></td></tr>
+				<form method="post"   action="${contextPath}/map/mapSearch.do"> 
 				<tr>
-					<td></td><td>축제시작일&nbsp&nbsp<input type="date" id="start" name="trip-start"  value="${fsv.startDate}">&nbsp&nbsp&nbsp&nbsp~&nbsp&nbsp
-					축제종료일&nbsp&nbsp<input type="date" id="end" name="trip-end"  value="${fsv.endDate}"></td>
+					<td></td><td><label>축제시작일</label>
+					<input type="date" id="start" name="trip-start"  value="${fsv.startDate}">
+					<label>~ 축제종료일</label>
+					<input type="date" id="end" name="trip-end"  value="${fsv.endDate}"></td>
 				</tr>
 				<tr>
 					<td></td><td>축제지역&nbsp&nbsp
@@ -137,8 +174,8 @@ request.setCharacterEncoding("UTF-8");
 		<table class="table">
 		  <thead>
 		    <tr>
-		      <th scope="col">번호</th>
-		      <th scope="col">축제명</th>
+		      <th scope="col" style="width:50px">번호</th>
+		      <th scope="col" style="width:300px">축제명</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -146,7 +183,7 @@ request.setCharacterEncoding("UTF-8");
 			    <tr>	
 			      <form method="get" action="${contextPath}/map/mapDetail.do">		    								     	
 				      <th scope="row">
-				      	 <input type="text" id="a1" name="fnum" value="${mem.fnum}" readonly>
+				      	 <input style="width:50px" type="text" id="a1" name="fnum" value="${mem.fnum}" readonly>
 				      </th>
 				      <td><button type="submit" class="btn btn-Light">${mem.fstvlNm}</button></td>	
 				      <td></td>	
