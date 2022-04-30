@@ -49,6 +49,7 @@ public class fstvlController extends HttpServlet{
 		String action = request.getPathInfo(); 
 		if (action == null || action.equals("/main.do")) { 
 			session.removeAttribute("check1");
+			session.removeAttribute("checkFavor");
 			String start = "";
 			String end = ""; 
 			String main = "";
@@ -102,6 +103,7 @@ public class fstvlController extends HttpServlet{
 			String yearNow = Integer.toString(now.getYear());
 			String monNow = Integer.toString(now.getMonthValue());
 			String dayNow = Integer.toString(now.getDayOfMonth());
+			String checkFavor="";
 			if(Integer.parseInt(monNow)<10){
 				if(Integer.parseInt(dayNow)<10)
 					start = yearNow+"-0"+monNow+"-0"+dayNow;
@@ -129,12 +131,19 @@ public class fstvlController extends HttpServlet{
 				else
 					end = yearNow+"-"+Integer.toString(now.getMonthValue()+1)+"-"+dayNow;				
 			}
+			if (session == null || session.getAttribute("checkFavor") == null || session.getAttribute("checkFavor").equals("")) {				
+				
+			}else {
+				checkFavor = String.valueOf(session.getAttribute("checkFavor"));  
+				session.removeAttribute("checkFavor");
+				request.setAttribute("checkFavor",checkFavor);
+			}
 			fstvlSearchVO fsv = new fstvlSearchVO(start,end,main,sub,name);
 			List<fstvlVO> maplist = mapdao.fstvlSearch(fsv);
 			request.setAttribute("fsv", fsv);
 			request.setAttribute("mapList", maplist);
 			nextPage = "/main.jsp";
-		}else if (action == null || action.equals("/mapSearch.do")) { 			  
+		}else if (action.equals("/mapSearch.do")) { 			  
 			fstvlDAO mapdao = new fstvlDAO();	
 			String start = request.getParameter("trip-start");
 			String end = request.getParameter("trip-end"); 
@@ -146,12 +155,26 @@ public class fstvlController extends HttpServlet{
 			request.setAttribute("fsv", fsv);
 			request.setAttribute("mapList", maplist);
 			nextPage = "/main.jsp";
-		}else if (action == null || action.equals("/mapDetail.do")) { 	 
+		}else if (action.equals("/mapDetail.do")) {
 			fstvlVO fdata = new fstvlVO();
 			fstvlDAO mapdao = new fstvlDAO();
-			String fnum = request.getParameter("fnum");
-			fdata = mapdao.mapData(fnum);
-			
+			String fnum = "";
+			String checkFavor = "";
+			if (session == null || session.getAttribute("reDetail") == null || session.getAttribute("reDetail").equals("")) {
+				fnum = request.getParameter("fnum");
+			}else {
+				if (session == null || session.getAttribute("checkFavor") == null || session.getAttribute("checkFavor").equals("")) {				
+					fnum = String.valueOf(session.getAttribute("reDetail")); 
+					session.removeAttribute("reDetail");
+				}else {
+					checkFavor = String.valueOf(session.getAttribute("checkFavor")); 
+					fnum = String.valueOf(session.getAttribute("reDetail")); 
+					session.removeAttribute("reDetail");
+					session.removeAttribute("checkFavor");
+					request.setAttribute("check",checkFavor);
+				}
+			}
+			fdata = mapdao.mapData(fnum);		
 			request.setAttribute("mapData",fdata);
 			nextPage = "/mapDetail.jsp";
 		}  

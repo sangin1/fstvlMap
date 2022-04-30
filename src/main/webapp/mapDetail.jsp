@@ -19,14 +19,24 @@ request.setCharacterEncoding("UTF-8");
 </head>
 
 <body>
-	<div id="top" style="height:100px">
+	<c:choose>
+	    <c:when test='${check == "1"}' >
+	        <script>
+				alert('이미 있는 즐겨찾기입니다.'); 
+			</script>
+	   </c:when> 
+   </c:choose>
+	<form method="post">
+	<div id="top" style="height:100px;padding:35px">
+		
 			<table>
 				<tr>
-					<td nowrap><font size="17">${mapData.fstvlNm} 세부정보</font></td>
+					<td nowrap><font size="17">${mapData.fstvlNm}</font></td>
+					<td><input type="hidden" class="class" name="fnum" id="fnum" value="${mapData.fnum}"></td>
 				</tr>
 			</table>
 	</div>
-	<div id="text_f" style="width:60vw;  float: left;">	
+	<div id="text_f" style="width:60vw;  float: left;padding:35px">	
 		<table class="table"> 
 		  <tbody> 
 			    <tr>	
@@ -56,8 +66,47 @@ request.setCharacterEncoding("UTF-8");
 			    <tr>	
 			       <td nowrap>주관</td> <td>${mapData.mnnst}   </td>   
 			    </tr> 
+			    <tr>	
+			    </tr> 
 		  </tbody>
-		</table>	
+		</table>
+			<c:choose>
+				<c:when test="${not empty msg}">	
+					<button type="submit" class="btn btn-info" formaction="${contextPath}/login/favor2.do">즐겨찾기</button>	
+				</c:when>
+			</c:choose>
+		<button class="btn btn-danger" type="button" onclick="location.href='${contextPath}/map/main.do'" >돌아가기</button>	
 	</div>
+	<div id="map" style="width:30vw; height: 50vh; float:right;margin: 100px 30px 0 50px;"></div>
+  	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_OQaaCohFpbHGvrUZRQrK_XTOSCWh4I&callback=initMap&region=kr"></script> 	
+  		<script>
+		    function initMap() {
+		      var base = { lat: 36.5642135 ,lng: 127.5016985 };
+		      var map = new google.maps.Map(
+		        document.getElementById('map'), {
+		          zoom: 7,
+		          center: base
+		        });		      	
+			    	var a = { lat:${mapData.latitude}, lng:${mapData.longitude}}; 
+			    	var markerName = "${mapData.fnum}"
+			    	var marker = new google.maps.Marker({
+			    	    position: a,
+			    	    map: map,	
+			    	    label: markerName
+			    	  }); 
+			    	google.maps.event.addListener(marker, 'click', (function(marker) {
+	                    return function() {;
+	                    }
+	                })(marker));
+	                if (marker) {
+	                    marker.addListener('click', function() {
+	                        map.setCenter(this.getPosition());
+	                        map.setZoom(12);
+	                    });
+	                }
+		    }
+		    
+		  </script>
+	</form>
 </body>
 </html>

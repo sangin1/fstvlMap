@@ -41,9 +41,14 @@ request.setCharacterEncoding("UTF-8");
 				history.back();
 			</script>
 	   </c:when>
+	   <c:when test='${checkFavor == "1"}' >
+	        <script>
+				alert('존재하는 즐겨찾기입니다.');
+				history.back();
+			</script>
+	   </c:when>
 	  </c:choose>
-	<div id="top" style="height:20%">
-		
+	<div id="top" style="height:20%">		
 			<table>
 				<tr>
 					<th style="width:5vw;"></th><th><label style="width:500px"><font size=20>국내축제검색</font></label></th>	
@@ -147,7 +152,7 @@ request.setCharacterEncoding("UTF-8");
 			</table>
 		</form>
 	</div>
-	<div id="map" style="width:70vw; height: 700px; float: left;"></div>
+	<div id="map" style="width:65vw; height: 700px; float: left;"></div>
   	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_OQaaCohFpbHGvrUZRQrK_XTOSCWh4I&callback=initMap&region=kr"></script> 	
   		<script>
 		    function initMap() {
@@ -157,40 +162,64 @@ request.setCharacterEncoding("UTF-8");
 		          zoom: 8,
 		          center: base
 		        });
-		      
-		      <c:forEach items="${mapList}" var="marker">		
-			    	var a = { lat:${marker.latitude}, lng:${marker.longitude}}; 
-			    	var markerName = "${marker.fnum}"
-			    	new google.maps.Marker({
-			    	    position: a,
-			    	    map: map,	
-			    	    label: markerName
-			    	  }); 
-			    </c:forEach> 
-		    }
+		      var arr = new Array();
+		      <c:forEach items="${mapList}" var="m">		
+		    	arr.push({name:"${m.fstvlNm}"
+		    		,lat:"${m.latitude}"
+		    		,lng:"${m.longitude}"
+		    		,fnum:"${m.fnum}"
+		    		});
+			    </c:forEach>
+			    var infowindow = new google.maps.InfoWindow();
+	            for (var i = 0; i < arr.length; i++) {
+	                var marker = new google.maps.Marker({
+	                    map: map,
+	                    position: new google.maps.LatLng(arr[i].lat, arr[i].lng),
+	                    label: arr[i].fnum
+	                });
+	                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+	                    return function() {
+	                        infowindow.setContent(
+	                        		'<div><div><h4>'+arr[i].name+'</h4><a href="${contextPath}/map/mapDetail.do?fnum='+arr[i].fnum+'"><p>상세정보</p></a></div>'
+	                        );
+	                        infowindow.open(map, marker);
+	                    }
+	                })(marker, i));
+	                if (marker) {
+	                    marker.addListener('click', function() {
+	                        map.setCenter(this.getPosition());
+	                        map.setZoom(10);
+	                    });
+	                }
+	            }
+			  }
 		    
 		  </script>
-	<div id="text_map" style="width:25vw; height: 80vh; float: right;">	
-		<table class="table">
+	<div id="text_map" style="overflow:auto; width:30vw; height: 700px; float: right;">	
+		<table class="table"> 
 		  <thead>
 		    <tr>
 		      <th scope="col" style="width:50px">번호</th>
 		      <th scope="col" style="width:300px">축제명</th>
 		    </tr>
-		  </thead>
+		  </thead> 
 		  <tbody>
 		  	<c:forEach  var="mem" items="${mapList}"> 
 			    <tr>	
-			      <form method="get" action="${contextPath}/map/mapDetail.do">		    								     	
+			      <form method="post">		    								     	
 				      <th scope="row">
 				      	 <input style="width:50px" type="text" id="a1" name="fnum" value="${mem.fnum}" readonly>
 				      </th>
-				      <td><button type="submit" class="btn btn-Light">${mem.fstvlNm}</button></td>	
-				      <td></td>	
+				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/map/mapDetail.do">${mem.fstvlNm}</button></td>	
+				      <c:choose>
+					    <c:when test="${not empty msg}">
+				      		<td style="white-space:nowrap;"><button type="submit" class="btn btn-Light" formaction="${contextPath}/login/favor.do">즐겨찾기</button></td>	
+				      	</c:when>
+				      </c:choose>
 			      </form>	      
 			    </tr>
 		    </c:forEach>
-		  </tbody>
+		  </tbody> 
 		</table>	
 	</div>
 </body>

@@ -10,11 +10,11 @@ import java.util.List;
 import fstvl.fstvlVO; 
 
 public class fstvlDAO {
-	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
+	final static String dbconnect = "jdbc:mariadb://192.168.111.132:3306/newdb?useUnicode=true&serverTimezone=UTC";
 	public fstvlDAO() {
 		try {
-			//Class.forName("org.mariadb.jdbc.Driver");
-			Class.forName("com.mysql.cj.jdbc.Driver");
+			Class.forName("org.mariadb.jdbc.Driver");
+			//Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e1) { 
 			e1.printStackTrace();
 		}
@@ -23,34 +23,34 @@ public class fstvlDAO {
 		List<fstvlVO> fstvl = new ArrayList<fstvlVO>();
 		String query="";
 		if(fsv.getFstvlName()=="" && fsv.getMainAddress()=="") {
-			query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0;"
+			query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fnum > 0;"
 					,fsv.getStartDate(),fsv.getEndDate()));
 		}
 		else if(fsv.getMainAddress()=="") {
-			query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fstvlNm like '%%%s%%';"
+			query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fstvlNm like '%%%s%%' and fnum > 0;"
 					,fsv.getStartDate(),fsv.getEndDate(),fsv.getFstvlName()));
 		}
 		else if(fsv.getFstvlName()=="") {
 			if(fsv.getMainAddress().equals("전체")) {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0;"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate()));
 			}else if(fsv.getSubAddress().equals("전체")) {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%';"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%' and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate(),fsv.getMainAddress()));
 			}else {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%' and rdnmadr like '%%%s%%';"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%' and rdnmadr like '%%%s%%' and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate(),fsv.getMainAddress(),fsv.getSubAddress()));
 			}			
 		}
 		else {
 			if(fsv.getMainAddress().equals("전체")) {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fstvlNm like '%%%s%%';"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and fstvlNm like '%%%s%%' and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate(),fsv.getFstvlName()));
 			}else if(fsv.getSubAddress().equals("전체")) {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%% and fstvlNm like '%%%s%%'';"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%% and fstvlNm like '%%%s%%'' and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate(),fsv.getMainAddress(),fsv.getFstvlName()));
 			}else {
-				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%' and rdnmadr like '%%%s%%' and fstvlNm like '%%%s%%';"
+				query = (String.format("select * from fdata where fstvlStartDate between '%s' and '%s' and latitude > 0 and rdnmadr like '%%%s%%' and rdnmadr like '%%%s%%' and fstvlNm like '%%%s%%' and fnum > 0;"
 						,fsv.getStartDate(),fsv.getEndDate(),fsv.getMainAddress(),fsv.getSubAddress(),fsv.getFstvlName()));
 			}
 		}
