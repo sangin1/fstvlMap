@@ -31,28 +31,25 @@ request.setCharacterEncoding("UTF-8");
 		
 			<table>
 				<tr>
-					<td nowrap><font size="17">${mapData.fstvlNm}</font></td>
-					<td><input type="hidden" class="class" name="fnum" id="fnum" value="${mapData.fnum}"></td>
+					<td nowrap><font size="17">${mapData.trrsrtNm}</font></td>
+					<td><input type="hidden" class="class" name="tnum" id="fnum" value="${mapData.tnum}"></td>
 				</tr>
 			</table>
 	</div>
 	<div id="text_f" style="height: 50vh;width:60vw;  float: left;padding:35px">	
 		<table class="table"> 
-		  <tbody> 
+		
 			    <tr>	
-			       <td nowrap>축제 시작일</td> <td nowrap>${mapData.fstvlStartDate}</td>      
+			       <td nowrap>소개</td> <td>${mapData.trrsrtIntrcn}</td>      
 			    </tr> 
 			    <tr>	
-			       <td nowrap>축제 종료일</td> <td>${mapData.fstvlEndDate}</td>      
+			       <td nowrap>편의시설</td> <td>${mapData.cnvnncFclty}</td>      
 			    </tr> 
 			    <tr>	
-			       <td nowrap>축제 내용</td> <td>${mapData.fstvlCo}</td>      
+			       <td nowrap>숙박시설</td> <td>${mapData.stayngInfo}</td>      
 			    </tr> 
 			    <tr>	
-			       <td nowrap>축제 장소</td> <td>${mapData.opar} </td>     
-			    </tr> 
-			    <tr>	
-			       <td nowrap>홈페이지</td> <td>${mapData.homepageUrl} </td>     
+			       <td>기타시설 및 정보</td> <td>${mapData.amsmtFclty} ${mapData.clturFclty}</td>      
 			    </tr> 
 			    <tr>	
 			       <td nowrap>전화번호</td> <td>${mapData.phoneNumber}  </td>    
@@ -64,18 +61,17 @@ request.setCharacterEncoding("UTF-8");
 			       <td nowrap>지번주소</td> <td>${mapData.lnmadr}  </td>    
 			    </tr> 
 			    <tr>	
-			       <td nowrap>주관</td> <td>${mapData.mnnst}   </td>   
+			       <td nowrap>관리기관</td> <td>${mapData.institutionNm}   </td>   
 			    </tr> 
 			    <tr>	
 			    </tr> 
-		  </tbody>
 		</table>
 			<c:choose>
 				<c:when test="${not empty msg}">	
-					<button type="submit" class="btn btn-info" formaction="${contextPath}/login/favor2.do">즐겨찾기</button>	
+					<button type="submit" class="btn btn-info" formaction="${contextPath}/login/favort2.do">즐겨찾기</button>	
 				</c:when>
 			</c:choose>
-		<button class="btn btn-danger" type="button" onclick="location.href='${contextPath}/map/main.do'" >돌아가기</button>	
+		<button class="btn btn-danger" type="button" onclick="location.href='${contextPath}/trr/main.do'" >돌아가기</button>	
 	</div>
 	<div id="map" style="width:30vw; height: 50vh; float:right;margin: 50px 30px 0 0px;"></div>
   	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_OQaaCohFpbHGvrUZRQrK_XTOSCWh4I&callback=initMap&region=kr"></script> 	
@@ -88,7 +84,7 @@ request.setCharacterEncoding("UTF-8");
 		          center: base
 		        });		      	
 			    	var a = { lat:${mapData.latitude}, lng:${mapData.longitude}}; 
-			    	var markerName = "${mapData.fnum}"
+			    	var markerName = "${mapData.tnum}"
 			    	var marker = new google.maps.Marker({
 			    	    position: a,
 			    	    map: map,	
@@ -108,7 +104,7 @@ request.setCharacterEncoding("UTF-8");
 		    
 		  </script>
 	</form>
-	<div style="margin: 600px 0px 0px 50px;height: 50vh;width:80vw;">
+	<div style="margin: 650px 0px 0px 50px;height: 50vh;width:80vw;">
 		<table class="table" style="font-size: 15px;text-align:center"> 
 			    <tr>	
 			       <td style="width:150px">날짜</td>

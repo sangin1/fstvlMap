@@ -39,11 +39,19 @@ request.setCharacterEncoding("UTF-8");
 		        });
 		      
 		      var arr = new Array();
+		      var arr2 = new Array();
 		      <c:forEach items="${mapList}" var="m">		
 		    	arr.push({name:"${m.fstvlNm}"
 		    		,lat:"${m.latitude}"
 		    		,lng:"${m.longitude}"
 		    		,fnum:"${m.fnum}"
+		    		});
+			    </c:forEach>
+			    <c:forEach items="${trrList}" var="t">		
+		    	arr2.push({name:"${t.trrsrtNm}"
+		    		,lat:"${t.latitude}"
+		    		,lng:"${t.longitude}"
+		    		,tnum:"${t.tnum}"
 		    		});
 			    </c:forEach>
 			    var infowindow = new google.maps.InfoWindow();
@@ -68,6 +76,27 @@ request.setCharacterEncoding("UTF-8");
 	                    });
 	                }
 	            }
+	            for (var i = 0; i < arr2.length; i++) {
+	                var marker = new google.maps.Marker({
+	                    map: map,
+	                    position: new google.maps.LatLng(arr2[i].lat, arr2[i].lng),
+	                    label: arr2[i].tnum
+	                });
+	                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+	                    return function() {
+	                        infowindow.setContent(
+	                        		'<div><div><h4>'+arr2[i].name+'</h4><a href="${contextPath}/trr/trrDetail.do?fnum='+arr[i].tnum+'"><p>상세정보</p></a></div>'
+	                        );
+	                        infowindow.open(map, marker);
+	                    }
+	                })(marker, i));
+	                if (marker) {
+	                    marker.addListener('click', function() {
+	                        map.setCenter(this.getPosition());
+	                        map.setZoom(12);
+	                    });
+	                }
+	            }
 		    }
 		     
 		  </script>
@@ -76,17 +105,28 @@ request.setCharacterEncoding("UTF-8");
 		  <thead>
 		    <tr>
 		      <th scope="col" style="width:50px">번호</th>
-		      <th scope="col" style="width:300px">축제명</th>
+		      <th scope="col" style="width:300px">이름</th>
 		    </tr>
 		  </thead> 
 		  <tbody>
 		  	<c:forEach  var="mem" items="${mapList}"> 
 			    <tr>	
 			      <form method="post">		    								     	
-				      <th scope="row">
+				      <td scope="row">
 				      	 <input style="width:50px" type="text" id="a1" name="fnum" value="${mem.fnum}" readonly>
-				      </th>
+				      </td>
 				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/map/mapDetail.do">${mem.fstvlNm}</button></td>	
+				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/login/favorDel.do">삭제</button></td>					      
+			      </form>	      
+			    </tr>
+		    </c:forEach>
+		    <c:forEach  var="trr" items="${trrList}"> 
+			    <tr>	
+			      <form method="post">		    								     	
+				      <td scope="row">
+				      	 <input style="width:50px" type="text" id="a1" name="tnum" value="${trr.tnum}" readonly>
+				      </td>
+				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/trr/trrDetail.do">${trr.trrsrtNm}</button></td>	
 				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/login/favorDel.do">삭제</button></td>					      
 			      </form>	      
 			    </tr>

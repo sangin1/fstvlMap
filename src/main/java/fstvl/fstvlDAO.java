@@ -10,11 +10,11 @@ import java.util.List;
 import fstvl.fstvlVO; 
 
 public class fstvlDAO {
-	final static String dbconnect = "jdbc:mariadb://192.168.111.132:3306/newdb?useUnicode=true&serverTimezone=UTC";
+	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
 	public fstvlDAO() {
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			//Class.forName("com.mysql.cj.jdbc.Driver");
+			//Class.forName("org.mariadb.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e1) { 
 			e1.printStackTrace();
 		}

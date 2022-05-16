@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import fstvl.fstvlVO;
+import trrsrt.trrsrtVO;
  
 
 /**
@@ -59,12 +60,24 @@ public class loginController extends HttpServlet{
 				session.setAttribute("msg",login);
 			}
 			nextPage = "/map/remain.do";
+		}else if (action.equals("/logint.do")) { 
+			String id = request.getParameter("id");
+			String pwd = request.getParameter("pwd"); 	
+			loginVO login = logindao.login(id,pwd);
+			String check1="";
+			check1 = login.getIdnum();
+			session.setAttribute("checkt",check1);
+			if(check1.equals("0")) {				
+			}else {
+				session.setAttribute("msg",login);
+			}
+			nextPage = "/trr/main.do";
 		}else if (action.equals("/memberForm.do")) { 
 			nextPage = "/memForm.jsp";
 		}else if (action.equals("/logout.do")) { 
 			session.invalidate();
 			nextPage = "/map/main.do";
-		}else if (action.equals("/favor.do")) {
+		}else if (action.equals("/favor.do")) { //축제메인으로
 			String checkFavor ="";
 			String fnum ="0";
 			String tnum ="0";
@@ -74,12 +87,27 @@ public class loginController extends HttpServlet{
 				fnum=request.getParameter("fnum");
 			}
 			if(request.getParameter("tnum")!=null) {
-				fnum=request.getParameter("tnum");
+				tnum=request.getParameter("tnum");
 			}
-			checkFavor=	logindao.addFavor(idnum,fnum,tnum);
+			checkFavor=	logindao.addFavor(idnum,fnum,tnum); //이미 즐겨찾기가 있으면 1리턴 
 			session.setAttribute("checkFavor",checkFavor);
 			nextPage = "/map/remain.do";
-		}else if (action.equals("/favor2.do")) {
+		}else if (action.equals("/favort.do")) { //관광지메인으로
+			String checkFavor ="";
+			String fnum ="0";
+			String tnum ="0";
+			loginVO vo = (loginVO)session.getAttribute("msg"); 
+			String idnum = vo.getIdnum();
+			if(request.getParameter("fnum")!=null) {
+				fnum=request.getParameter("fnum");
+			}
+			if(request.getParameter("tnum")!=null) {
+				tnum=request.getParameter("tnum");
+			}
+			checkFavor=	logindao.addFavor(idnum,fnum,tnum); //이미 즐겨찾기가 있으면 1리턴 
+			session.setAttribute("checkFavor",checkFavor);
+			nextPage = "/trr/main.do";
+		}else if (action.equals("/favor2.do")) { //축제세부로
 			String checkFavor ="";
 			String fnum ="0";
 			String tnum ="0";
@@ -90,12 +118,30 @@ public class loginController extends HttpServlet{
 				session.setAttribute("reDetail",fnum);
 			}
 			if(request.getParameter("tnum")!=null) {
-				fnum=request.getParameter("tnum");
+				tnum=request.getParameter("tnum");
 				session.setAttribute("reDetailt",tnum);
 			}
 			checkFavor=	logindao.addFavor(idnum,fnum,tnum); 
 			session.setAttribute("checkFavor",checkFavor);
 			nextPage = "/map/mapDetail.do";
+		}else if (action.equals("/favort2.do")) { //축제세부로
+			String checkFavor ="";
+			String fnum ="0";
+			String tnum ="0";
+			loginVO vo = (loginVO)session.getAttribute("msg"); 
+			String idnum = vo.getIdnum();
+			
+			if(request.getParameter("fnum")!=null) {
+				fnum=request.getParameter("fnum");
+				session.setAttribute("reDetail",fnum);
+			}
+			if(request.getParameter("tnum")!=null) {
+				tnum=request.getParameter("tnum");
+				session.setAttribute("reDetailt",tnum);
+			}
+			checkFavor=	logindao.addFavor(idnum,fnum,tnum); 
+			session.setAttribute("checkFavor",checkFavor);
+			nextPage = "/trr/trrDetail.do";
 		}else if (action.equals("/addMember.do")) { 
 			loginVO log= new loginVO(request.getParameter("id"),request.getParameter("pass")); 
 			String check="0";
@@ -113,21 +159,25 @@ public class loginController extends HttpServlet{
 				}
 			}			
 		}else if (action.equals("/mypage.do")) { 
-			favorDAO favordao = new favorDAO();			
+			favorDAO favordao = new favorDAO();		
 			loginVO loginvo = (loginVO)session.getAttribute("msg");
 			List<fstvlVO> maplist = favordao.fstvlSearch(loginvo.getIdnum());
+			List<trrsrtVO> trrlist = favordao.trrSearch(loginvo.getIdnum());
 			request.setAttribute("mapList", maplist);
+			request.setAttribute("trrList", trrlist);
 			nextPage = "/mypage.jsp";
 		}else if (action.equals("/favorDel.do")) { 
 			favorDAO favordao = new favorDAO();			
 			loginVO loginvo = (loginVO)session.getAttribute("msg");
-			if(request.getParameter("fnum").equals("null")) {
-				
+			if(request.getParameter("fnum")==null) {
+				favordao.tnumdel(loginvo.getIdnum(),request.getParameter("tnum"));
 			}else {
 				favordao.fnumdel(loginvo.getIdnum(),request.getParameter("fnum"));
 			}			
 			List<fstvlVO> maplist = favordao.fstvlSearch(loginvo.getIdnum());
+			List<trrsrtVO> trrlist = favordao.trrSearch(loginvo.getIdnum());
 			request.setAttribute("mapList", maplist);
+			request.setAttribute("trrList", trrlist);
 			nextPage = "/mypage.jsp";
 		}else {
 			nextPage = "/main.jsp";

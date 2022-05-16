@@ -9,13 +9,14 @@ import java.util.List;
 
 import fstvl.fstvlSearchVO;
 import fstvl.fstvlVO;
+import trrsrt.trrsrtVO;
 
 public class favorDAO {
-	final static String dbconnect = "jdbc:mariadb://192.168.111.132:3306/newdb?useUnicode=true&serverTimezone=UTC";
+	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
 	public favorDAO() {
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			//Class.forName("com.mysql.cj.jdbc.Driver");
+			//Class.forName("org.mariadb.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e1) { 
 			e1.printStackTrace();
 		}
@@ -24,7 +25,8 @@ public class favorDAO {
 	public List<fstvlVO> fstvlSearch(String id) {
 		List<fstvlVO> fstvl = new ArrayList<fstvlVO>();
 		String query="";
-			query = (String.format("select distinct * from fdata join favorites where favorites.idnum = %s and fdata.fnum = favorites.fnum;\r\n"
+			query = (String.format("select distinct * from fdata join favorites where favorites.idnum = %s and fdata.fnum = favorites.fnum"
+					+ " and fdata.fnum > 0;\r\n"
 					+ ";"
 					,id));
 				
@@ -61,6 +63,50 @@ public class favorDAO {
 		}
 		return fstvl;
 	}
+	public List<trrsrtVO> trrSearch(String id) {
+		List<trrsrtVO> trrsrt = new ArrayList<trrsrtVO>();
+		String query="";
+			query = (String.format("select distinct * from favorites join trrsrt where favorites.idnum = %s and trrsrt.tnum = favorites.tnum and "
+					+ "trrsrt.tnum >0;\r\n"
+					,id));
+				
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+			Statement stmt = conn.createStatement(); 
+			ResultSet rs = stmt.executeQuery(query);
+				
+		){
+			while(rs.next()){ 
+				trrsrtVO trrsrtvo = new trrsrtVO();
+				trrsrtvo.setTrrsrtNm(rs.getString("trrsrtNm"));	
+				trrsrtvo.setTrrsrtSe(rs.getString("trrsrtSe"));
+				trrsrtvo.setRdnmadr(rs.getString("rdnmadr"));
+				trrsrtvo.setLnmadr(rs.getString("lnmadr"));
+				trrsrtvo.setLatitude(rs.getString("latitude"));
+				trrsrtvo.setLongitude(rs.getString("longitude"));
+				trrsrtvo.setAr(rs.getString("ar"));
+				trrsrtvo.setCnvnncFclty(rs.getString("cnvnncFclty"));
+				trrsrtvo.setStayngInfo(rs.getString("stayngInfo"));
+				trrsrtvo.setAmsmtFclty(rs.getString("amsmtFclty"));
+				trrsrtvo.setClturFclty(rs.getString("clturFclty"));
+				trrsrtvo.setHospitalityFclty(rs.getString("hospitalityFclty"));
+				trrsrtvo.setSportFclty(rs.getString("sportFclty"));
+				trrsrtvo.setAppnDate(rs.getString("appnDate"));
+				trrsrtvo.setAceptncCo(rs.getString("aceptncCo"));
+				trrsrtvo.setPrkplceCo(rs.getString("prkplceCo"));
+				trrsrtvo.setTrrsrtIntrcn(rs.getString("trrsrtIntrcn"));
+				trrsrtvo.setPhoneNumber(rs.getString("phonrNumber"));
+				trrsrtvo.setInstitutionNm(rs.getString("institutionNm"));
+				trrsrtvo.setReferenceDate(rs.getString("referenceDate"));
+				trrsrtvo.setInstt_nm(rs.getString("instt_nm"));
+				trrsrtvo.setTnum(rs.getString("tnum")); 
+				trrsrt.add(trrsrtvo);			
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return trrsrt;
+	}
 	public void fnumdel(String idnum, String fnum) {
 		try(Connection conn = DriverManager.getConnection(
 				dbconnect,"root","1234");
@@ -68,6 +114,21 @@ public class favorDAO {
 				
 		){ 		
 			stmt.execute(String.format("delete from favorites where idnum = %s and fnum = %s",
+					idnum,fnum));
+			/*PreparedStatement pstmt = conn.prepareStatement(String.format("detele from employee where c_id = %s and name = '%s'",
+					c_id,name));
+			pstmt.executeUpdate();  */
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void tnumdel(String idnum, String fnum) {
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+				Statement stmt = conn.createStatement();
+				
+		){ 		
+			stmt.execute(String.format("delete from favorites where idnum = %s and tnum = %s",
 					idnum,fnum));
 			/*PreparedStatement pstmt = conn.prepareStatement(String.format("detele from employee where c_id = %s and name = '%s'",
 					c_id,name));

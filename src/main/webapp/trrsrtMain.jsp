@@ -15,7 +15,7 @@ request.setCharacterEncoding("UTF-8");
 <head>
   <meta charset="utf-8">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-  <title>여행정보검색</title>
+  <title>국내관광지검색</title>
   <style>
   	.titleNm{
   		margin-left: 5vw;
@@ -78,7 +78,7 @@ request.setCharacterEncoding("UTF-8");
 
 <body>
 	<c:choose>
-	    <c:when test='${check1 == "0"}' >
+	    <c:when test='${checkt == "0"}' >
 	        <script>
 				alert('아이디 또는 비밀번호가 틀렸습니다.');
 				history.back();
@@ -109,21 +109,15 @@ request.setCharacterEncoding("UTF-8");
 		</div>
 		<div style="height:20%" align="center">
 			<div style="height:100%; background-color:#F8F6F6"> 
-				<button style="width: 200px; height:100%; background-color:#E0DDDD; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/map/main.do'" style="width:120px">축제</button> 
-				<button style="width: 200px; height:100%; background-color:#F8F6F6; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/trr/main.do'" style="width:120px">관광지</button> 	 
+				<button style="width: 200px; height:100%; background-color:#F8F6F6; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/map/main.do'" style="width:120px">축제</button> 
+				<button style="width: 200px; height:100%; background-color:#E0DDDD; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/trr/main.do'" style="width:120px">관광지</button> 	 
 	 		</div>
 		</div>
 		<div style="height:50%" >
 			<table style="margin:40px 0px 0px 30px">			
-				<form method="post" action="${contextPath}/map/mapSearch.do"> 				
+				<form method="post" action="${contextPath}/trr/trrSearch.do"> 		
 				<tr>
-					<td></td><td><label>축제시작일</label>
-					<input type="date" id="start" name="trip-start"  value="${fsv.startDate}">
-					<label>~ 축제종료일</label>
-					<input type="date" id="end" name="trip-end"  value="${fsv.endDate}"></td>
-				</tr>
-				<tr>
-					<td></td><td>축제지역&nbsp&nbsp
+					<td></td><td>지역&nbsp&nbsp
 					<select name="main" onchange="categoryChange(this)">
 				      <option value="전체">전체</option>				
 				      <option value="서울">서울</option>				
@@ -187,7 +181,7 @@ request.setCharacterEncoding("UTF-8");
 					</td>
 				</tr>
 				<tr>
-					<td></td><td>축제명&nbsp&nbsp<input type="text" name="fname" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" >검색</button>
+					<td></td><td>관광지명&nbsp&nbsp<input type="text" name="tname" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" >검색</button>
 				</tr>
 			</form>
 			</table>
@@ -205,10 +199,10 @@ request.setCharacterEncoding("UTF-8");
 		        });
 		      var arr = new Array();
 		      <c:forEach items="${mapList}" var="m">		
-		    	arr.push({name:"${m.fstvlNm}"
+		    	arr.push({name:"${m.trrsrtNm}"
 		    		,lat:"${m.latitude}"
 		    		,lng:"${m.longitude}"
-		    		,fnum:"${m.fnum}"
+		    		,tnum:"${m.tnum}"
 		    		});
 			    </c:forEach>
 			    var infowindow = new google.maps.InfoWindow();
@@ -216,12 +210,12 @@ request.setCharacterEncoding("UTF-8");
 	                var marker = new google.maps.Marker({
 	                    map: map,
 	                    position: new google.maps.LatLng(arr[i].lat, arr[i].lng),
-	                    label: arr[i].fnum
+	                    label: arr[i].tnum
 	                });
 	                google.maps.event.addListener(marker, 'click', (function(marker, i) {
 	                    return function() {
 	                        infowindow.setContent(
-	                        		'<div><div><h4>'+arr[i].name+'</h4><a href="${contextPath}/map/mapDetail.do?fnum='+arr[i].fnum+'"><p>상세정보</p></a></div>'
+	                        		'<div><div><h4>'+arr[i].name+'</h4><a href="${contextPath}/trr/trrDetail.do?fnum='+arr[i].tnum+'"><p>상세정보</p></a></div>'
 	                        );
 	                        infowindow.open(map, marker);
 	                    }
@@ -241,20 +235,20 @@ request.setCharacterEncoding("UTF-8");
 		  <thead>
 		    <tr>
 		      <th scope="col" style="width:50px">번호</th>
-		      <th scope="col" style="width:300px">축제명</th>
+		      <th scope="col" style="width:300px">관광지명</th>
 		    </tr>
 		  </thead> 
 		  <tbody>
 		  	<c:forEach  var="mem" items="${mapList}"> 
 			    <tr>	
 			      <form method="post">		    								     	
-				      <th scope="row">
-				      	 <input style="width:50px" type="text" id="a1" name="fnum" value="${mem.fnum}" readonly>
-				      </th>
-				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/map/mapDetail.do">${mem.fstvlNm}</button></td>	
+				      <td scope="row">
+				      	 <input style="width:50px" type="text" id="a1" name="tnum" value="${mem.tnum}" readonly>
+				      </td>
+				      <td><button type="submit" class="btn btn-Light" formaction="${contextPath}/trr/trrDetail.do">${mem.trrsrtNm}</button></td>	
 				      <c:choose>
 					    <c:when test="${not empty msg}">
-				      		<td style="white-space:nowrap;"><button type="submit" class="btn btn-Light" formaction="${contextPath}/login/favor.do">즐겨찾기</button></td>	
+				      		<td style="white-space:nowrap;"><button type="submit" class="btn btn-Light" formaction="${contextPath}/login/favort.do">즐겨찾기</button></td>	
 				      	</c:when>
 				      </c:choose>
 			      </form>	      
@@ -266,7 +260,7 @@ request.setCharacterEncoding("UTF-8");
 	<div id="mySidenav" class="sidenav" align="center">
 	  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 	  	
-		    <form name = "frm"  method="post"   action="${contextPath}/login/login.do">
+		    <form name = "frm"  method="post"   action="${contextPath}/login/logint.do">
 		    <div class="mb-3" align="center" style="margin: 15px;">
 			    <label for="inputid3" class="form-label" style="width:50px">아이디</label>
 			    <input type="text" class="form-control" name="id" style="width:150px">

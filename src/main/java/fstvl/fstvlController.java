@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import fstvl.fstvlDAO;
 import fstvl.fstvlSearchVO;
 import fstvl.fstvlVO;
+import weather.sweatherVO;
+import weather.sweatherDAO;
  
 
 /**
@@ -47,6 +49,7 @@ public class fstvlController extends HttpServlet{
 		response.setContentType("text/html;charset=utf-8");
 		HttpSession session = request.getSession();
 		String action = request.getPathInfo(); 
+		//처음화면
 		if (action == null || action.equals("/main.do")) { 
 			session.removeAttribute("check1");
 			session.removeAttribute("checkFavor");
@@ -92,7 +95,7 @@ public class fstvlController extends HttpServlet{
 			request.setAttribute("fsv", fsv);
 			request.setAttribute("mapList", maplist);
 			nextPage = "/main.jsp";
-		}else if (action.equals("/remain.do")) { 
+		}else if (action.equals("/remain.do")) {   //로그인시 메인
 			String start = "";
 			String end = ""; 
 			String main = "";
@@ -158,6 +161,8 @@ public class fstvlController extends HttpServlet{
 		}else if (action.equals("/mapDetail.do")) {
 			fstvlVO fdata = new fstvlVO();
 			fstvlDAO mapdao = new fstvlDAO();
+			sweatherVO swdata = new sweatherVO();
+			sweatherDAO swdao = new sweatherDAO();
 			String fnum = "";
 			String checkFavor = "";
 			if (session == null || session.getAttribute("reDetail") == null || session.getAttribute("reDetail").equals("")) {
@@ -174,8 +179,10 @@ public class fstvlController extends HttpServlet{
 					request.setAttribute("check",checkFavor);
 				}
 			}
-			fdata = mapdao.mapData(fnum);		
+			fdata = mapdao.mapData(fnum);
+			swdata = swdao.sweatherS(fdata.getRdnmadr(),fdata.getLnmadr());
 			request.setAttribute("mapData",fdata);
+			request.setAttribute("sweatherData",swdata);
 			nextPage = "/mapDetail.jsp";
 		}  
 		else {
