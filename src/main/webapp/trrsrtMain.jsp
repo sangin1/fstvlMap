@@ -91,8 +91,8 @@ request.setCharacterEncoding("UTF-8");
 			</script>
 	   </c:when>
 	  </c:choose>
-	<div id="top" style="height:50%;">		
-		<div style="height:30%; display: flex;" align="center">
+	<div id="top" style="height:70%;">		
+		<div style="height:25%; display: flex;" align="center">
 			<div style="flex:1; margin:1% 0px 10px 0px">				
 				<label style="width:500px"><img src="../images/balloon.png"  width="80px" height="80px"/><font size=25>여행정보검색</font></label>
 			</div>
@@ -107,18 +107,18 @@ request.setCharacterEncoding("UTF-8");
 				</c:choose>
 			</div>							  								
 		</div>
-		<div style="height:20%" align="center">
+		<div style="height:15%" align="center">
 			<div style="height:100%; background-color:#F8F6F6"> 
 				<button style="width: 200px; height:100%; background-color:#F8F6F6; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/map/main.do'" style="width:120px">축제</button> 
 				<button style="width: 200px; height:100%; background-color:#E0DDDD; font-size:25px" class="btn btn-light" type="button" onclick="location.href='${contextPath}/trr/main.do'" style="width:120px">관광지</button> 	 
 	 		</div>
 		</div>
-		<div style="height:50%" >
+		<div style="height:60%" >
 			<table style="margin:40px 0px 0px 30px">			
 				<form method="post" action="${contextPath}/trr/trrSearch.do"> 		
 				<tr>
 					<td></td><td>지역&nbsp&nbsp
-					<select name="main" onchange="categoryChange(this)">
+					<select name="main" onchange="categoryChange(this)" class="form-select">
 				      <option value="전체">전체</option>				
 				      <option value="서울">서울</option>				
 				      <option value="경기도">경기</option>
@@ -138,7 +138,7 @@ request.setCharacterEncoding("UTF-8");
 				      <option value="세종">세종</option>					      			
 				    </select>
 				    &nbsp&nbsp&nbsp&nbsp
-				    <select name="sub" id="sub">
+				    <select name="sub" id="sub" class="form-select">
 						<option value="all">전체</option>
 					</select>
 					<script>
@@ -181,7 +181,7 @@ request.setCharacterEncoding("UTF-8");
 					</td>
 				</tr>
 				<tr>
-					<td></td><td>관광지명&nbsp&nbsp<input type="text" name="tname" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" >검색</button>
+					<td></td><td><label class="form-label" style="margin:20px 0px 0px 0px;">관광지명</label><input type="text" name="tname" class="form-control">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<button type="submit" class="btn btn-primary" style="margin:20px 0px 0px 0px;width:100px;">검색</button>
 				</tr>
 			</form>
 			</table>

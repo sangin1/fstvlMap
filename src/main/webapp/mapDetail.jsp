@@ -33,49 +33,62 @@ request.setCharacterEncoding("UTF-8");
 				<tr>
 					<td nowrap><font size="17">${mapData.fstvlNm}</font></td>
 					<td><input type="hidden" class="class" name="fnum" id="fnum" value="${mapData.fnum}"></td>
+					<td><input type="hidden" class="class" name="fname" id="fname" value="${mapData.fstvlNm}"></td>
+					<td><input type="hidden" class="class" name="lat" id="lat" value="${mapData.latitude}"></td>
+					<td><input type="hidden" class="class" name="lot" id="lot" value="${mapData.longitude}"></td>
 				</tr>
 			</table>
 	</div>
-	<div id="text_f" style="height: 50vh;width:60vw;  float: left;padding:35px">	
-		<table class="table"> 
-		  <tbody> 
-			    <tr>	
-			       <td nowrap>축제 시작일</td> <td nowrap>${mapData.fstvlStartDate}</td>      
-			    </tr> 
-			    <tr>	
-			       <td nowrap>축제 종료일</td> <td>${mapData.fstvlEndDate}</td>      
-			    </tr> 
-			    <tr>	
-			       <td nowrap>축제 내용</td> <td>${mapData.fstvlCo}</td>      
-			    </tr> 
-			    <tr>	
-			       <td nowrap>축제 장소</td> <td>${mapData.opar} </td>     
-			    </tr> 
-			    <tr>	
-			       <td nowrap>홈페이지</td> <td>${mapData.homepageUrl} </td>     
-			    </tr> 
-			    <tr>	
-			       <td nowrap>전화번호</td> <td>${mapData.phoneNumber}  </td>    
-			    </tr> 
-			    <tr>	
-			       <td nowrap>도로명주소</td> <td>${mapData.rdnmadr}  </td>    
-			    </tr> 
-			    <tr>	
-			       <td nowrap>지번주소</td> <td>${mapData.lnmadr}  </td>    
-			    </tr> 
-			    <tr>	
-			       <td nowrap>주관</td> <td>${mapData.mnnst}   </td>   
-			    </tr> 
-			    <tr>	
-			    </tr> 
-		  </tbody>
-		</table>
-			<c:choose>
-				<c:when test="${not empty msg}">	
-					<button type="submit" class="btn btn-info" formaction="${contextPath}/login/favor2.do">즐겨찾기</button>	
-				</c:when>
-			</c:choose>
-		<button class="btn btn-danger" type="button" onclick="location.href='${contextPath}/map/main.do'" >돌아가기</button>	
+	<div id="text_f" style="height: 50vh;width:60vw;  float: left;padding:35px">
+		<div>	
+			<table class="table"> 
+			  <tbody> 
+				    <tr>	
+				       <td nowrap>축제 시작일</td> <td nowrap>${mapData.fstvlStartDate}</td>      
+				    </tr> 
+				    <tr>	
+				       <td nowrap>축제 종료일</td> <td>${mapData.fstvlEndDate}</td>      
+				    </tr> 
+				    <tr>	
+				       <td nowrap>축제 내용</td> <td>${mapData.fstvlCo}</td>      
+				    </tr> 
+				    <tr>	
+				       <td nowrap>축제 장소</td> <td>${mapData.opar} </td>     
+				    </tr> 
+				    <tr>	
+				       <td nowrap>홈페이지</td> <td><a href="${mapData.homepageUrl}">${mapData.homepageUrl}</a> </td>     
+				    </tr> 
+				    <tr>	
+				       <td nowrap>전화번호</td> <td>${mapData.phoneNumber}  </td>    
+				    </tr> 
+				    <tr>	
+				       <td nowrap>도로명주소</td> <td>${mapData.rdnmadr}  </td>    
+				    </tr> 
+				    <tr>	
+				       <td nowrap>지번주소</td> <td>${mapData.lnmadr}  </td>    
+				    </tr> 
+				    <tr>	
+				       <td nowrap>주관</td> <td>${mapData.mnnst}   </td>   
+				    </tr> 
+				    <tr>	
+				    </tr> 
+			  </tbody>
+			</table>
+				<c:choose>
+					<c:when test="${not empty msg}">	
+						<button type="submit" class="btn btn-info" formaction="${contextPath}/login/favor2.do">즐겨찾기</button>						
+					</c:when>
+				</c:choose>
+			<button class="btn btn-danger" type="button" onclick="location.href='${contextPath}/map/main.do'" >돌아가기</button>	
+		</div>
+		<div>
+			<select name="km" onchange="categoryChange(this)" class="form-select" style="width:200px;">
+				      <option value="20">20km</option>				
+				      <option value="10">10km</option>				
+				      <option value="50">50km</option>						      			
+			</select>
+			<button type="submit" class="btn btn-success" formaction="${contextPath}/trr/distance.do">주변 관광지 검색</button>	
+		</div>
 	</div>
 	<div id="map" style="width:30vw; height: 50vh; float:right;margin: 50px 30px 0 0px;"></div>
   	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_OQaaCohFpbHGvrUZRQrK_XTOSCWh4I&callback=initMap&region=kr"></script> 	

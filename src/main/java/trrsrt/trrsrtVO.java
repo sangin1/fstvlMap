@@ -24,7 +24,9 @@ public class trrsrtVO {
 	private String instt_codr;
 	private String instt_nm;
 	private String tnum;
-	
+	private String km;
+	private String hour;
+	private String min;
 	public trrsrtVO(){
 		
 	}
@@ -58,6 +60,32 @@ public class trrsrtVO {
 		this.instt_codr = instt_codr;
 		this.instt_nm = instt_nm;
 		this.tnum = tnum;
+	}
+	
+	public String getKm() {
+		return km;
+	}
+
+	public void setKm(String km) {
+		this.km = km;
+	}
+	
+	
+
+	public String getHour() {
+		return hour;
+	}
+
+	public void setHour(String hour) {
+		this.hour = hour;
+	}
+
+	public String getMin() {
+		return min;
+	}
+
+	public void setMin(String min) {
+		this.min = min;
 	}
 
 	public String getTrrsrtNm() {

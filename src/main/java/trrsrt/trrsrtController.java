@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import fstvl.fstvlDAO;
 import fstvl.fstvlSearchVO;
 import fstvl.fstvlVO;
+import login.loginVO;
 import weather.sweatherVO;
 import weather.sweatherDAO;
  
@@ -106,7 +107,22 @@ public class trrsrtController extends HttpServlet{
 			request.setAttribute("mapData",tdata);
 			request.setAttribute("sweatherData",swdata);
 			nextPage = "/trrsrtDetail.jsp";
-		}  
+		}else if (action.equals("/distance.do")) {
+			List<trrsrtVO> tdata = new ArrayList<trrsrtVO>();
+			trrsrtDAO mapdao = new trrsrtDAO();
+			String fnum = "",latitude="",longitude="",km="",fname="";
+			fnum = request.getParameter("fnum");
+			fname = request.getParameter("fname");
+			latitude = request.getParameter("lat");
+			longitude = request.getParameter("lot");
+			km = request.getParameter("km");
+
+			tdata = mapdao.fstvltrrsrt(latitude, longitude, km);
+			request.setAttribute("fnum", fnum);
+			request.setAttribute("fname", fname);
+			request.setAttribute("mapList", tdata);
+			nextPage = "/trrsrtDistance.jsp";
+		}   
 		else {
 			nextPage = "/main.jsp";
 		}
