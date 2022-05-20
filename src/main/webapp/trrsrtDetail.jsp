@@ -104,7 +104,35 @@ request.setCharacterEncoding("UTF-8");
 		    
 		  </script>
 	</form>
-	<div style="margin: 650px 0px 0px 50px;height: 50vh;width:80vw;">
+	<script>
+		window.onload=function(){
+	    	if (navigator.geolocation) {
+			    navigator.geolocation.getCurrentPosition(function(position) {				        
+			        var lat1 = position.coords.latitude, // 위도
+			            lon1 = position.coords.longitude, // 경도				
+			            lat2 = "${mapData.latitude}",
+			            lon2 = "${mapData.longitude}";
+			        var theta = lon1 - lon2; 
+			        var dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta)); 
+					dist = Math.acos(dist); dist = rad2deg(dist); 
+					dist = dist * 60 * 1.1515; 
+					dist = dist * 1.609344; 
+					document.getElementById('dis1').value = '내 위치부터 거리:'+Math.round(dist)+'km';
+			      });				    
+			} else {				    				     
+			}
+	    }
+		function deg2rad(deg) { 
+			return (deg * Math.PI / 180.0); 
+		} 
+		function rad2deg(rad) { 
+			return (rad * 180 / Math.PI); 
+		}
+	</script>
+	<div>
+		<input style="height:30px; margin: 30px 0px 0px 70vw;" type="text" id="dis1" name="dis1" value="위치정보를 알 수 없어요" readonly>
+	</div>
+	<div style="margin: 50px 0px 0px 50px;height: 50vh;width:80vw;">
 		<table class="table" style="font-size: 15px;text-align:center"> 
 			    <tr>	
 			       <td style="width:150px">날짜</td>

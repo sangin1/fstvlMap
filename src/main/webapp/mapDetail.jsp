@@ -39,7 +39,7 @@ request.setCharacterEncoding("UTF-8");
 				</tr>
 			</table>
 	</div>
-	<div id="text_f" style="height: 50vh;width:60vw;  float: left;padding:35px">
+	<div id="text_f" style="height: 50vh;width:60vw;  float: left;padding:5vh">
 		<div>	
 			<table class="table"> 
 			  <tbody> 
@@ -90,7 +90,7 @@ request.setCharacterEncoding("UTF-8");
 			<button type="submit" class="btn btn-success" formaction="${contextPath}/trr/distance.do">주변 관광지 검색</button>	
 		</div>
 	</div>
-	<div id="map" style="width:30vw; height: 50vh; float:right;margin: 50px 30px 0 0px;"></div>
+	<div id="map" style="width:30vw; height: 50vh; float:right;margin: 8vh 30px 0px 0px;"></div>
   	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv_OQaaCohFpbHGvrUZRQrK_XTOSCWh4I&callback=initMap&region=kr"></script> 	
   		<script>
 		    function initMap() {
@@ -118,10 +118,37 @@ request.setCharacterEncoding("UTF-8");
 	                    });
 	                }
 		    }
-		    
-		  </script>
+	</script>
+	<script>
+		window.onload=function(){
+	    	if (navigator.geolocation) {
+			    navigator.geolocation.getCurrentPosition(function(position) {				        
+			        var lat1 = position.coords.latitude, // 위도
+			            lon1 = position.coords.longitude, // 경도				
+			            lat2 = "${mapData.latitude}",
+			            lon2 = "${mapData.longitude}";
+			        var theta = lon1 - lon2; 
+			        var dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta)); 
+					dist = Math.acos(dist); dist = rad2deg(dist); 
+					dist = dist * 60 * 1.1515; 
+					dist = dist * 1.609344; 
+					document.getElementById('dis1').value = '내 위치부터 거리:'+Math.round(dist)+'km';
+			      });				    
+			} else {				    				     
+			}
+	    }
+		function deg2rad(deg) { 
+			return (deg * Math.PI / 180.0); 
+		} 
+		function rad2deg(rad) { 
+			return (rad * 180 / Math.PI); 
+		}
+	</script>
 	</form>
-	<div style="margin: 600px 0px 0px 50px;height: 50vh;width:80vw;">
+	<div>
+		<input style="height:30px; margin: 30px 0px 0px 70vw;" type="text" id="dis1" name="dis1" value="위치정보를 알 수 없어요" readonly>
+	</div>
+	<div style="margin: 50px 0px 0px 50px;height: 50vh;width:80vw;">
 		<table class="table" style="font-size: 15px;text-align:center"> 
 			    <tr>	
 			       <td style="width:150px">날짜</td>
