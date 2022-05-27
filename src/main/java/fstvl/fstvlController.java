@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import fstvl.fstvlDAO;
 import fstvl.fstvlSearchVO;
 import fstvl.fstvlVO;
+import login.loginVO;
 import weather.sweatherVO;
 import weather.sweatherDAO;
  
@@ -160,6 +161,7 @@ public class fstvlController extends HttpServlet{
 			nextPage = "/main.jsp";
 		}else if (action.equals("/mapDetail.do")) {
 			fstvlVO fdata = new fstvlVO();
+			List<reviewVO> redata = new ArrayList<reviewVO>();
 			fstvlDAO mapdao = new fstvlDAO();
 			sweatherVO swdata = new sweatherVO();
 			sweatherDAO swdao = new sweatherDAO();
@@ -180,11 +182,75 @@ public class fstvlController extends HttpServlet{
 				}
 			}
 			fdata = mapdao.mapData(fnum);
+			redata = mapdao.fselectreview(fnum);
 			swdata = swdao.sweatherS(fdata.getRdnmadr(),fdata.getLnmadr());
+			request.setAttribute("reviewList",redata);
 			request.setAttribute("mapData",fdata);
 			request.setAttribute("sweatherData",swdata);
 			nextPage = "/mapDetail.jsp";
 		}  
+		else if (action.equals("/mapreviewadd.do")) {
+			fstvlVO fdata = new fstvlVO();
+			List<reviewVO> redata = new ArrayList<reviewVO>();
+			fstvlDAO mapdao = new fstvlDAO();
+			sweatherVO swdata = new sweatherVO();
+			sweatherDAO swdao = new sweatherDAO();
+			loginVO msg = (loginVO) session.getAttribute("msg");
+			String fnum = "",retext="";
+			fnum = request.getParameter("fnum");
+			retext = request.getParameter("addtext");
+			mapdao.faddreview(msg.getIdnum(),retext, fnum);
+			
+			fdata = mapdao.mapData(fnum);
+			redata = mapdao.fselectreview(fnum);
+			swdata = swdao.sweatherS(fdata.getRdnmadr(),fdata.getLnmadr());
+			request.setAttribute("reviewList",redata);
+			request.setAttribute("mapData",fdata);
+			request.setAttribute("sweatherData",swdata);
+			nextPage = "/mapDetail.jsp";
+		}
+		else if (action.equals("/mapreviewdel.do")) {
+			fstvlVO fdata = new fstvlVO();
+			List<reviewVO> redata = new ArrayList<reviewVO>();
+			fstvlDAO mapdao = new fstvlDAO();
+			sweatherVO swdata = new sweatherVO();
+			sweatherDAO swdao = new sweatherDAO();
+			loginVO msg = (loginVO) session.getAttribute("msg");
+			String fnum = "",reid="";
+			fnum = request.getParameter("fnum");
+			reid = request.getParameter("renum");
+			
+			mapdao.freviewdel(reid);
+			
+			fdata = mapdao.mapData(fnum);
+			redata = mapdao.fselectreview(fnum);
+			swdata = swdao.sweatherS(fdata.getRdnmadr(),fdata.getLnmadr());
+			request.setAttribute("reviewList",redata);
+			request.setAttribute("mapData",fdata);
+			request.setAttribute("sweatherData",swdata);
+			nextPage = "/mapDetail.jsp";
+		}
+		else if (action.equals("/mapreviewup.do")) {
+			fstvlVO fdata = new fstvlVO();
+			List<reviewVO> redata = new ArrayList<reviewVO>();
+			fstvlDAO mapdao = new fstvlDAO();
+			sweatherVO swdata = new sweatherVO();
+			sweatherDAO swdao = new sweatherDAO();
+			loginVO msg = (loginVO) session.getAttribute("msg");
+			String fnum = "",retext="",reid="";
+			fnum = request.getParameter("fnum");
+			retext = request.getParameter("retext");
+			reid = request.getParameter("renum");
+			mapdao.freviewup(reid,retext);
+			
+			fdata = mapdao.mapData(fnum);
+			redata = mapdao.fselectreview(fnum);
+			swdata = swdao.sweatherS(fdata.getRdnmadr(),fdata.getLnmadr());
+			request.setAttribute("reviewList",redata);
+			request.setAttribute("mapData",fdata);
+			request.setAttribute("sweatherData",swdata);
+			nextPage = "/mapDetail.jsp";
+		}
 		else {
 			nextPage = "/main.jsp";
 		}

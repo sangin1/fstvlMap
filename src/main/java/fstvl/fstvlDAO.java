@@ -2,12 +2,13 @@ package fstvl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import fstvl.fstvlVO; 
+import fstvl.fstvlVO;
 
 public class fstvlDAO {
 	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
@@ -125,5 +126,68 @@ public class fstvlDAO {
 		array = fstvlvo.getFstvlEndDate().split(" ");
 		fstvlvo.setFstvlEndDate(array[0]);
 		return fstvlvo;
+	}
+	public void faddreview(String idnum,String text,String num) {		
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+			Statement stmt = conn.createStatement();
+		){
+			stmt.executeUpdate(String.format("insert into review(retext, idnum, fanum) value ('%s', %s,%s)",
+					text,idnum,num));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}	
+	public List<reviewVO> fselectreview(String fnum) {		
+		List<reviewVO> trrsrt = new ArrayList<reviewVO>();
+		String query="";
+			query = (String.format("select distinct * from review join login where fanum = %s and review.idnum = login.idnum"
+					,fnum));
+				
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+			Statement stmt = conn.createStatement(); 
+			ResultSet rs = stmt.executeQuery(query);
+				
+		){
+			while(rs.next()){ 
+				reviewVO trrsrtvo = new reviewVO();
+				trrsrtvo.setRenum(rs.getString("reid"));;	
+				trrsrtvo.setRetext(rs.getString("retext"));
+				trrsrtvo.setIdnum(rs.getString("idnum"));
+				trrsrtvo.setFanum(rs.getString("fanum")); 
+				trrsrtvo.setTnum(rs.getString("tnum")); 
+				trrsrtvo.setName(rs.getString("id")); 
+				trrsrt.add(trrsrtvo);			
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return trrsrt;
+	}
+	public void freviewdel(String reid) {
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+				Statement stmt = conn.createStatement();
+				
+		){ 		
+			stmt.execute(String.format("delete from review where reid = %s",
+					reid));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void freviewup(String reid,String text) {
+			try(Connection conn = DriverManager.getConnection(
+					dbconnect,"root","1234"); 			
+					PreparedStatement pstmt = conn.prepareStatement(String.format("update review set retext = '%s' where reid = %s",
+							text, reid));				
+			){ 		 
+				pstmt.executeUpdate();   
+				 
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		
 	}
 }

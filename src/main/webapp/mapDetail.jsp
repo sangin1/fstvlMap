@@ -117,6 +117,31 @@ request.setCharacterEncoding("UTF-8");
 	                        map.setZoom(12);
 	                    });
 	                }
+	                if (navigator.geolocation) {
+	    			    navigator.geolocation.getCurrentPosition(function(position) {		
+	    			            var a = { lat:position.coords.latitude, lng:position.coords.longitude}; 
+	    				    	var markerName = "나"
+	    				    	var marker = new google.maps.Marker({
+	    				    	    position: a,
+	    				    	    map: map,	
+	    				    	    label: markerName
+	    				    	  }); 
+	    				    	google.maps.event.addListener(marker, 'click', (function(marker) {
+	    		                    return function() {;
+	    		                    }
+	    		                })(marker));
+	    		                if (marker) {
+	    		                    marker.addListener('click', function() {
+	    		                        map.setCenter(this.getPosition());
+	    		                        map.setZoom(12);
+	    		                    });
+	    		                }
+	    						                
+	    			      });				    
+	    			}
+	                
+	                
+	                
 		    }
 	</script>
 	<script>
@@ -133,6 +158,7 @@ request.setCharacterEncoding("UTF-8");
 					dist = dist * 60 * 1.1515; 
 					dist = dist * 1.609344; 
 					document.getElementById('dis1').value = '내 위치부터 거리:'+Math.round(dist)+'km';
+						                
 			      });				    
 			} else {				    				     
 			}
@@ -251,6 +277,43 @@ request.setCharacterEncoding("UTF-8");
 				    </c:forEach>	
 			    </tr> 
 		</table>
+	</div>
+	<div style="margin: 2px 0px 0px 10vw;">
+		<table style="margin: 2px 0px 50px 0px;">
+		<c:forEach  var="re" items="${reviewList}"> 
+			
+			      <form method="post">	
+			      	<tr>
+			      	  <td><label>아이디</label><input style="width:100px" type="text" name="id" value="${re.name}" readonly></td>
+			      	</tr>
+			      	<tr>			      	
+			      	  <td>				      	  			      	 
+					      <c:choose>
+						    <c:when test="${msg.idnum eq re.idnum}">
+						    	<textarea style="width:50vw" id="retext" name="retext">${re.retext}</textarea>
+						    	<button type="submit" class="btn btn-secondary" formaction="${contextPath}/map/mapreviewup.do">수정</button>
+		     					<button type="submit" class="btn btn-secondary" formaction="${contextPath}/map/mapreviewdel.do">삭제</button>
+					      </c:when>
+					      <c:otherwise>
+					      	<textarea style="width:50vw" id="retext2" name="retext2" readonly>${re.retext}</textarea>
+					      </c:otherwise>
+					      </c:choose>
+					      <input type="hidden" class="class" name="fnum" id="fnum" value="${mapData.fnum}">
+				      	  <input type="hidden" class="class" name="renum" id="renum" value="${re.renum}">
+				      	</td>
+				      </tr>
+			      </form>			    	 
+		    </c:forEach>
+		    </table>
+		  <c:choose>
+			<c:when test="${not empty msg}">
+				 <form method="post">
+			      <textarea id=addtext name=addtext style="width:50vw"></textarea>			      
+			      <input type="hidden" class="class" name="fnum" id="fnum" value="${mapData.fnum}">	
+			      <button type="submit" class="btn btn-secondary" formaction="${contextPath}/map/mapreviewadd.do">등록</button>	          
+			    </form>
+		    </c:when>
+	     </c:choose>
 	</div>
 </body>
 </html>

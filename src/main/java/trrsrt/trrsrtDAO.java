@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
+import fstvl.reviewVO;
 
 public class trrsrtDAO {
 	final static String dbconnect = "jdbc:mysql://localhost:3306/fstvldb?useUnicode=true&serverTimezone=UTC";
@@ -235,6 +238,69 @@ public class trrsrtDAO {
 			e.printStackTrace();
 		}
         return trrsrtvo;
+	}
+	public void taddreview(String idnum,String text,String num) {		
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+			Statement stmt = conn.createStatement();
+		){
+			stmt.executeUpdate(String.format("insert into review(retext, idnum, tnum) value ('%s', %s,%s)",
+					text,idnum,num));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}	
+	public List<reviewVO> tselectreview(String fnum) {		
+		List<reviewVO> trrsrt = new ArrayList<reviewVO>();
+		String query="";
+			query = (String.format("select distinct * from review join login where tnum = %s and review.idnum = login.idnum"
+					,fnum));
+				
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+			Statement stmt = conn.createStatement(); 
+			ResultSet rs = stmt.executeQuery(query);
+				
+		){
+			while(rs.next()){ 
+				reviewVO trrsrtvo = new reviewVO();
+				trrsrtvo.setRenum(rs.getString("reid"));;	
+				trrsrtvo.setRetext(rs.getString("retext"));
+				trrsrtvo.setIdnum(rs.getString("idnum"));
+				trrsrtvo.setFanum(rs.getString("fanum")); 
+				trrsrtvo.setTnum(rs.getString("tnum")); 
+				trrsrtvo.setName(rs.getString("id")); 
+				trrsrt.add(trrsrtvo);			
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return trrsrt;
+	}
+	public void treviewdel(String reid) {
+		try(Connection conn = DriverManager.getConnection(
+				dbconnect,"root","1234");
+				Statement stmt = conn.createStatement();
+				
+		){ 		
+			stmt.execute(String.format("delete from review where reid = %s",
+					reid));
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public void treviewup(String reid,String text) {
+			try(Connection conn = DriverManager.getConnection(
+					dbconnect,"root","1234"); 			
+					PreparedStatement pstmt = conn.prepareStatement(String.format("update review set retext = '%s' where reid = %s",
+							text, reid));				
+			){ 		 
+				pstmt.executeUpdate();   
+				 
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		
 	}
 
 }

@@ -32,7 +32,7 @@ request.setCharacterEncoding("UTF-8");
 			<table>
 				<tr>
 					<td nowrap><font size="17">${mapData.trrsrtNm}</font></td>
-					<td><input type="hidden" class="class" name="tnum" id="fnum" value="${mapData.tnum}"></td>
+					<td><input type="hidden" class="class" name="tnum" id="tnum" value="${mapData.tnum}"></td>
 				</tr>
 			</table>
 	</div>
@@ -100,6 +100,28 @@ request.setCharacterEncoding("UTF-8");
 	                        map.setZoom(12);
 	                    });
 	                }
+	                if (navigator.geolocation) {
+	    			    navigator.geolocation.getCurrentPosition(function(position) {		
+	    			            var a = { lat:position.coords.latitude, lng:position.coords.longitude}; 
+	    				    	var markerName = "나"
+	    				    	var marker = new google.maps.Marker({
+	    				    	    position: a,
+	    				    	    map: map,	
+	    				    	    label: markerName
+	    				    	  }); 
+	    				    	google.maps.event.addListener(marker, 'click', (function(marker) {
+	    		                    return function() {;
+	    		                    }
+	    		                })(marker));
+	    		                if (marker) {
+	    		                    marker.addListener('click', function() {
+	    		                        map.setCenter(this.getPosition());
+	    		                        map.setZoom(12);
+	    		                    });
+	    		                }
+	    						                
+	    			      });				    
+	    			}
 		    }
 		    
 		  </script>
@@ -235,6 +257,42 @@ request.setCharacterEncoding("UTF-8");
 				    </c:forEach>	
 			    </tr> 
 		</table>
+	</div>
+	<div style="margin: 2px 0px 0px 10vw;">
+		<table style="margin: 2px 0px 50px 0px;">
+		<c:forEach  var="re" items="${reviewList}"> 			
+			      <form method="post">	
+			      	<tr>
+			      	  <td><label>아이디</label><input style="width:100px" type="text" name="id" value="${re.name}" readonly></td>
+			      	</tr>
+			      	<tr>			      	
+			      	  <td>			      	  			      	 
+					      <c:choose>
+						    <c:when test="${msg.idnum eq re.idnum}">
+						    	<textarea style="width:50vw" id="retext" name="retext">${re.retext}</textarea>
+						    	<button type="submit" class="btn btn-secondary" formaction="${contextPath}/trr/trrreviewup.do">수정</button>
+		     					<button type="submit" class="btn btn-secondary" formaction="${contextPath}/trr/trrreviewdel.do">삭제</button>
+					      </c:when>
+					      <c:otherwise>
+					      	<textarea style="width:50vw" id="retext2" name="retext2" readonly>${re.retext}</textarea>
+					      </c:otherwise>
+					      </c:choose>
+					      <input type="hidden" class="class" name="tnum" id="tnum" value="${mapData.tnum}">
+				      	  <input type="hidden" class="class" name="renum" id="renum" value="${re.renum}">
+				      	</td>
+				      </tr>
+			      </form>			    	 
+		    </c:forEach>
+		    </table>
+		  <c:choose>
+			<c:when test="${not empty msg}">
+				 <form method="post">
+			      <textarea id=addtext name=addtext style="width:50vw"></textarea>			      
+			      <input type="hidden" class="class" name="tnum" id="tnum" value="${mapData.tnum}">	
+			      <button type="submit" class="btn btn-secondary" formaction="${contextPath}/trr/trrreviewadd.do">등록</button>	          
+			    </form>
+		    </c:when>
+	     </c:choose>
 	</div>
 </body>
 </html>
